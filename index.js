@@ -1,5 +1,6 @@
 // console.log('nayem')
 let clickCount = 0;
+let historiesData = []
 // function for icon
 function getClickResult(id) {
     document.getElementById(id).addEventListener('click', function (e) {
@@ -12,26 +13,66 @@ function getClickResult(id) {
 
 // for call
 function toCall(id) {
-    document.getElementById(id).addEventListener('click', function () {
-        const header = document.getElementById('header').innerText;
-        const number = document.getElementById('num').innerText;
-        alert('📞 calling ' + header + ' ' + number + '... ');
+    document.getElementById(id).addEventListener('click', function (e) {
+        e.preventDefault();
+        const card = e.currentTarget.closest('.bg-white');
+        const header = card.querySelector('.card-header').innerText;
+        const number = card.querySelector('.card-num').innerText;
+
         const coinElement = document.getElementById('coin');
         const coinInt = parseInt(coinElement.innerText);
         if (coinInt < 20) {
             alert('❌ insufficient coin!!!')
             return;
         }
-        
+        alert('📞 calling ' + header + ' ' + number + '... ');
+
         const availableCoin = coinInt - 20;
         coinElement.innerText = availableCoin;
-    })
+        const data = {
 
+            name: header,
+            number: number,
+            date: new Date().toLocaleTimeString()
+
+
+        }
+        historiesData.push(data);
+
+
+        renderHistory();
+    })
+}
+
+// function for inserting history
+function renderHistory() {
+
+    const historyContainer = document.getElementById('history-container');
+    historyContainer.innerHTML = ''; // Clear old entries
+
+    for (const data of historiesData) {
+        const div = document.createElement('div');
+        div.innerHTML = `<div class="flex justify-between items-center bg-[#FAFAFA] p-4 mx-4 mt-3 rounded-lg">
+
+
+               <div>
+                <h2 class="font-bold text-[18px]">${data.name}</h2>
+                <p class="text-[#5C5C5C]">${data.number}</p>
+               </div>
+               <p class="text-sm text-gray-600">${data.date}</p>
+              </div>
+            `;
+        historyContainer.appendChild(div);
+    }
 }
 
 
 
+
+
 // for 1
+
+
 getClickResult('heart-1')
 toCall('call-1')
 
@@ -59,4 +100,5 @@ toCall('call-8')
 
 getClickResult('heart-9')
 toCall('call-9')
+
 
